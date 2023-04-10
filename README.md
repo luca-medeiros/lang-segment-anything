@@ -18,4 +18,5 @@ To run the gradio demo:
 ### Based on
 
 https://github.com/IDEA-Research/GroundingDINO
+
 https://github.com/facebookresearch/segment-anything
