@@ -3,7 +3,7 @@ Image + Text prompt -> GroundingDINO -> BBox -> SAM -> masks
 
 ![car.png](/assets/outputs/car.png)
 ![kiwi.png](/assets/outputs/kiwi.png)
-![food.png](/assets/outputs/food.png)
+![food.png](/assets/outputs/person.png)
 
 ## Running
 
