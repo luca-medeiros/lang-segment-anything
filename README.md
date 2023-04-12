@@ -1,5 +1,5 @@
 # Language Segment-Anything
-Image + Text prompt -> GroundingDINO -> BBox -> Sam
+Image + Text prompt -> GroundingDINO -> BBox -> SAM -> masks
 
 ![car.png](/assets/outputs/car.png)
 ![kiwi.png](/assets/outputs/kiwi.png)
@@ -7,16 +7,17 @@ Image + Text prompt -> GroundingDINO -> BBox -> Sam
 
 ## Running
 
-To run the gradio demo:
+To run the Lightning AI APP:
 
     git clone https://github.com/luca-medeiros/lang-segment-anything
     cd lang-segment-anything
-    wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
     pip install -r requirements.txt
-    python main.py
+    lightning run app app.py
 
 ### Based on
 
 https://github.com/IDEA-Research/GroundingDINO
 
 https://github.com/facebookresearch/segment-anything
+
+https://github.com/Lightning-AI/lightning

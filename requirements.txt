@@ -8,5 +8,6 @@ setuptools
 torch
 torchvision
 transformers
+lightning
 git+https://github.com/facebookresearch/segment-anything
 git+https://github.com/IDEA-Research/GroundingDINO
