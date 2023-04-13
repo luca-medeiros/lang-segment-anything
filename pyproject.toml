@@ -1,0 +1,73 @@
+[tool.poetry]
+name = "lang-sam"
+version = "0.1.0"
+description = "Language segment-anything"
+readme = "README.md"
+documentation = ""
+repository = "https://github.com/luca-medeiros/lang-segment-anything"
+authors = [
+  "Luca Medeiros <lucamedeiros@outlook.com>",
+]
+license = ""
+packages = [
+    { include = "lang_sam" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.8, <3.11"
+gradio = "^3.24.1"
+huggingface-hub = "^0.13.4"
+numpy = "^1.24.2"
+opencv_python = "^4.7.0.72"
+Pillow = "^9.3.0"
+transformers = "^4.27.4"
+lightning = "^2.0.1"
+segment-anything = {git = "ssh://git@github.com/facebookresearch/segment-anything.git"}
+groundingdino = {git = "ssh://git@github.com/IDEA-Research/GroundingDINO.git"}
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2.20.0"
+commitizen = "2.27.0"
+pytest = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core >= 1.4.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+target-version = "py38"
+line-length = 120
+fix = true
+select = [
+    # https://github.com/charliermarsh/ruff#pyflakes-f
+    "F", # Pyflakes
+    # https://github.com/charliermarsh/ruff#pycodestyle-e-w
+    "E", # pycodestyle
+    "W", # Warning
+    # https://github.com/charliermarsh/ruff#flake8-comprehensions-c4
+    # https://github.com/charliermarsh/ruff#mccabe-c90
+    "C", # Complexity (mccabe+) & comprehensions
+    # https://github.com/charliermarsh/ruff#pyupgrade-up
+    "UP", # pyupgrade
+    # https://github.com/charliermarsh/ruff#isort-i
+    "I", # isort
+]
+ignore = [
+    # https://github.com/charliermarsh/ruff#pycodestyle-e-w
+    "E402", # module level import not at top of file
+    # https://github.com/charliermarsh/ruff#pyupgrade-up
+    "UP006", # use-pep585-annotation
+    "UP007", # use-pep604-annotation
+    "E741", # Ambiguous variable name
+]
+[tool.ruff.per-file-ignores]
+"__init__.py" = [
+    "F401",  # unused import
+    "F403",  # star imports
+    ]
+
+[tool.ruff.mccabe]
+max-complexity = 24
+
+[tool.ruff.pydocstyle]
+convention = "numpy"

@@ -1,0 +1,72 @@
+
+default_language_version:
+  python: python3.8
+
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-case-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=350', '--enforce-all']
+      - id: detect-private-key
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v2.27.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+        name: Format commit msg
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.31.0
+    hooks:
+      - id: pyupgrade
+        args: [--py37-plus]
+        name: Upgrade code
+
+  - repo: https://github.com/myint/docformatter
+    rev: v1.4
+    hooks:
+      - id: docformatter
+        args: [--in-place, --wrap-summaries=115, --wrap-descriptions=120]
+
+  - repo: https://github.com/asottile/yesqa
+    rev: v1.3.0
+    hooks:
+      - id: yesqa
+        name: Unused noqa
+
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: v3.0.1
+    hooks:
+    -   id: reorder-python-imports
+
+  - repo: https://github.com/pre-commit/mirrors-yapf
+    rev: v0.32.0
+    hooks:
+      - id: yapf
+        name: Format code
+        additional_dependencies: ['toml==0.10.2']
+
+  - repo: https://github.com/asottile/blacken-docs
+    rev: v1.12.0
+    hooks:
+      - id: blacken-docs
+        args: [--line-length=120]
+        additional_dependencies: [black==21.12b0]
+
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.11
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+          - mdformat_frontmatter
+        exclude: CHANGELOG.md

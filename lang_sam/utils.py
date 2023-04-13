@@ -1,8 +1,9 @@
-import torch
 import cv2
 import numpy as np
+import torch
 from PIL import Image
-from torchvision.utils import draw_bounding_boxes, draw_segmentation_masks
+from torchvision.utils import draw_bounding_boxes
+from torchvision.utils import draw_segmentation_masks
 
 MIN_AREA = 100
 
@@ -40,15 +41,14 @@ def contour_to_points(contour):
 
 
 def generate_labelme_json(binary_masks, labels, image_size, image_path=None):
-    """
-    Generate a LabelMe format JSON file from binary mask tensor.
-    
+    """Generate a LabelMe format JSON file from binary mask tensor.
+
     Args:
         binary_masks: Binary mask tensor of shape [N, H, W].
         labels: List of labels for each mask.
         image_size: Tuple of (height, width) for the image size.
         image_path: Path to the image file (optional).
-    
+
     Returns:
         A dictionary representing the LabelMe JSON file.
     """

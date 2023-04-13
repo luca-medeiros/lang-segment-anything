@@ -1,18 +1,17 @@
 import os
-import torch
-import numpy as np
-import torch
-import groundingdino.datasets.transforms as T
-
 from urllib import request
 
+import groundingdino.datasets.transforms as T
+import numpy as np
+import torch
 from groundingdino.models import build_model
-from groundingdino.util.slconfig import SLConfig
 from groundingdino.util import box_ops
-from groundingdino.util.utils import clean_state_dict
 from groundingdino.util.inference import predict
-from segment_anything import sam_model_registry, SamPredictor
+from groundingdino.util.slconfig import SLConfig
+from groundingdino.util.utils import clean_state_dict
 from huggingface_hub import hf_hub_download
+from segment_anything import sam_model_registry
+from segment_anything import SamPredictor
 
 SAM_MODELS = {
     "vit_h": "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth",
@@ -31,7 +30,7 @@ def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
     cache_file = hf_hub_download(repo_id=repo_id, filename=filename)
     checkpoint = torch.load(cache_file, map_location='cpu')
     log = model.load_state_dict(clean_state_dict(checkpoint['model']), strict=False)
-    print("Model loaded from {} \n => {}".format(cache_file, log))
+    print(f"Model loaded from {cache_file} \n => {log}")
     model.eval()
     return model
 
@@ -94,7 +93,7 @@ class LangSAM():
         )
         return masks.cpu()
 
-    def predict(self, image_pil, text_prompt, box_threshold, text_threshold):
+    def predict(self, image_pil, text_prompt, box_threshold=0.3, text_threshold=0.25):
         boxes, logits, phrases = self.predict_dino(image_pil, text_prompt, box_threshold, text_threshold)
         masks = torch.tensor([])
         if len(boxes) > 0:

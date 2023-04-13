@@ -1,15 +1,16 @@
 import os
-import torch
 import warnings
+
 import gradio as gr
-import numpy as np
 import lightning as L
-
-from PIL import Image
+import numpy as np
 from lightning.app.components.serve import ServeGradio
+from PIL import Image
 
-from src.utils import draw_image, generate_labelme_json, load_image
-from src.lang_sam import LangSAM, SAM_MODELS
+from lang_sam import LangSAM
+from lang_sam import SAM_MODELS
+from lang_sam.utils import draw_image
+from lang_sam.utils import load_image
 
 warnings.filterwarnings("ignore")
 
@@ -64,7 +65,6 @@ class LitGradio(ServeGradio):
         image_array = np.asarray(image_pil)
         image = draw_image(image_array, masks, boxes, labels)
         image = Image.fromarray(np.uint8(image)).convert("RGB")
-        # labelme = generate_labelme_json(masks, phrases, image_array.shape, image_path)
         return image
 
     def build_model(self, sam_type="vit_h"):
