@@ -59,6 +59,16 @@ masks, boxes, phrases, logits = model.predict(image_pil, text_prompt)
 
 ![person.png](/assets/outputs/person.png)
 
+## Roadmap
+
+Future goals for this project include:
+
+1. **FastAPI integration**: To streamline deployment even further, we plan to add FastAPI code to our project, making it easier for users to deploy and interact with the model.
+
+1. **Labeling pipeline**: We want to create a labeling pipeline that allows users to input both the text prompt and the image and receive labeled instance segmentation outputs. This would help users efficiently generate results for further analysis and training.
+
+1. **Implement CLIP version**: To (maybe) enhance the model's capabilities and performance, we will explore the integration of OpenAI's CLIP model. This could provide improved language understanding and potentially yield better instance segmentation results.
+
 ## Acknowledgments
 
 This project is based on the following repositories:
