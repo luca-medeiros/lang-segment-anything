@@ -9,8 +9,8 @@ from PIL import Image
 
 from lang_sam import LangSAM
 from lang_sam import SAM_MODELS
-from lang_sam.utils import draw_image
-from lang_sam.utils import load_image
+from lang_sam.data.utils import draw_image
+from lang_sam.data.utils import load_image
 
 warnings.filterwarnings("ignore")
 

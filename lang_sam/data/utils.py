@@ -1,15 +1,54 @@
+import os
+from pathlib import Path
+
 import cv2
 import numpy as np
+import pandas as pd
 import torch
 from PIL import Image
+from s3fs import S3FileSystem
 from torchvision.utils import draw_bounding_boxes
 from torchvision.utils import draw_segmentation_masks
 
 MIN_AREA = 100
+IMG_EXT = [".jpg", ".jpeg", ".png", ".bmp"]
 
 
-def load_image(image_path: str):
-    return Image.open(image_path).convert("RGB")
+def results_to_df(results):
+    data = []
+    for result in results:
+        image_path = result['image']['file_path']
+        img_filename = os.path.basename(image_path)
+        width = result['image']['width']
+        height = result['image']['height']
+
+        for _, box, label, score in result['outputs']:
+            bbox_x, bbox_y, bbox_w, bbox_h = box
+            data.append({
+                'img_filename': img_filename,
+                'bbox_x': bbox_x,
+                'bbox_y': bbox_y,
+                'bbox_w': bbox_w,
+                'bbox_h': bbox_h,
+                'label': label,
+                'score': score,
+            })
+
+    df = pd.DataFrame(data)
+    return df
+
+
+def load_image(image_path):
+
+    if image_path.startswith("s3"):
+        fs = S3FileSystem()
+        with fs.open(image_path, "rb") as f:
+            image = Image.open(f).convert("RGB")
+    else:
+        with open(image_path, "rb") as f:
+            image = Image.open(f).convert("RGB")
+
+    return image
 
 
 def draw_image(image, masks, boxes, labels, alpha=0.4):
@@ -17,6 +56,47 @@ def draw_image(image, masks, boxes, labels, alpha=0.4):
     image = draw_bounding_boxes(image, boxes, colors=['red'] * len(boxes), labels=labels, width=2)
     image = draw_segmentation_masks(image, masks=masks, colors=['cyan'] * len(boxes), alpha=alpha)
     return image.numpy().transpose(1, 2, 0)
+
+
+def get_image_paths(data_folder: str):
+    image_paths = []
+
+    # Check if it's a local directory or an S3 URI
+    if data_folder.startswith("s3"):
+        path_parts = data_folder.replace("s3://", "").split("/")
+        bucket_name = path_parts.pop(0)
+        prefix = "/".join(path_parts)
+
+        fs = S3FileSystem()
+
+        s3_image_uris = fs.glob(f"{bucket_name}/{prefix}/*")
+        for uri in s3_image_uris:
+            _, ext = os.path.splitext(uri)
+            if ext.lower() in IMG_EXT:
+                image_paths.append(f"s3://{uri}")
+    else:
+        # It's a local directory
+        data_folder = Path(data_folder)
+        for ext in IMG_EXT:
+            image_paths.extend([str(p.resolve()) for p in data_folder.glob('*' + ext)])
+
+    return image_paths
+
+
+def mask_to_polygon(mask):
+    """Convert a binary mask to COCO polygon format."""
+    if isinstance(mask, torch.Tensor):
+        mask = mask.detach().cpu().numpy()
+    # Find contours in the binary mask
+    contours = get_contours(mask)
+
+    segmentation = []
+    for contour in contours:
+        poly = contour.flatten().tolist()
+        if len(poly) > 4:
+            segmentation.append(poly)
+
+    return segmentation
 
 
 def get_contours(mask):
