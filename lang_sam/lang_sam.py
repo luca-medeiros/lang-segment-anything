@@ -19,7 +19,7 @@ SAM_MODELS = {
     "vit_b": "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
 }
 
-CACHE_PATH = os.environ.get("TORCH_HOME", "~/.cache/torch/hub")
+CACHE_PATH = os.environ.get("TORCH_HOME", "~/.cache/torch/hub/checkpoints")
 
 
 def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
@@ -58,8 +58,10 @@ class LangSAM():
 
     def build_sam(self, sam_type):
         url = SAM_MODELS[sam_type]
-        sam_checkpoint = os.path.join(CACHE_PATH, 'checkpoints', os.path.basename(url))
+        sam_checkpoint = os.path.join(CACHE_PATH, os.path.basename(url))
         if not os.path.exists(sam_checkpoint):
+            if not os.path.exists(CACHE_PATH):
+                os.makedirs(CACHE_PATH)
             request.urlretrieve(url, sam_checkpoint)
         sam = sam_model_registry[sam_type](checkpoint=sam_checkpoint)
         sam.to(device=self.device)
