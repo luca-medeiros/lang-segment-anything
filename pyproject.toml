@@ -19,7 +19,7 @@ gradio = "^3.24.1"
 huggingface-hub = "^0.13.4"
 numpy = "^1.24.2"
 opencv_python = "^4.7.0.72"
-Pillow = "^9.3.0"
+Pillow = "9.3.0"
 transformers = "^4.27.4"
 lightning = "^2.0.1"
 segment-anything = {git = "https://github.com/facebookresearch/segment-anything.git"}
