@@ -42,7 +42,7 @@ To run the Lightning AI APP:
 
 Use as a library:
 
-```
+```python
 from  PIL  import  Image
 from lang_sam import LangSAM
 
