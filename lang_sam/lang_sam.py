@@ -66,11 +66,9 @@ class LangSAM():
         try:
             sam = sam_model_registry[sam_type](checkpoint=sam_checkpoint)
         except:
-            raise ValueError(
-                f"Problem loading SAM please make sure you have the right model type: {sam_type} \
+            raise ValueError(f"Problem loading SAM please make sure you have the right model type: {sam_type} \
                 and a working checkpoint: {sam_checkpoint}. Recommend deleting the checkpoint and \
-                re-downloading it."
-            )
+                re-downloading it.")
         sam.to(device=self.device)
         self.sam = SamPredictor(sam)
 
