@@ -19,7 +19,7 @@ SAM_MODELS = {
     "vit_b": "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
 }
 
-CACHE_PATH = os.environ.get("TORCH_HOME", "~/.cache/torch/hub/checkpoints")
+CACHE_PATH = os.environ.get("TORCH_HOME", os.path.expanduser("~/.cache/torch/hub/checkpoints"))
 
 
 def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
@@ -105,3 +105,6 @@ class LangSAM():
             masks = self.predict_sam(image_pil, boxes)
             masks = masks.squeeze(1)
         return masks, boxes, phrases, logits
+
+
+LangSAM()
