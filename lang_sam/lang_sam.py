@@ -112,6 +112,3 @@ class LangSAM():
             masks = self.predict_sam(image_pil, boxes)
             masks = masks.squeeze(1)
         return masks, boxes, phrases, logits
-
-
-LangSAM()
