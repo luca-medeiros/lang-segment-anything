@@ -19,7 +19,7 @@ SAM_MODELS = {
     "vit_b": "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth"
 }
 
-CACHE_PATH = os.environ.get("TORCH_HOME", "~/.cache/torch/hub/checkpoints")
+CACHE_PATH = os.environ.get("TORCH_HOME", os.path.expanduser("~/.cache/torch/hub/checkpoints"))
 
 
 def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
@@ -63,7 +63,14 @@ class LangSAM():
             if not os.path.exists(CACHE_PATH):
                 os.makedirs(CACHE_PATH)
             request.urlretrieve(url, sam_checkpoint)
-        sam = sam_model_registry[sam_type](checkpoint=sam_checkpoint)
+        try:
+            sam = sam_model_registry[sam_type](checkpoint=sam_checkpoint)
+        except:
+            raise ValueError(
+                f"Problem loading SAM please make sure you have the right model type: {sam_type} \
+                and a working checkpoint: {sam_checkpoint}. Recommend deleting the checkpoint and \
+                re-downloading it."
+            )
         sam.to(device=self.device)
         self.sam = SamPredictor(sam)
 
@@ -105,3 +112,6 @@ class LangSAM():
             masks = self.predict_sam(image_pil, boxes)
             masks = masks.squeeze(1)
         return masks, boxes, phrases, logits
+
+
+LangSAM()
