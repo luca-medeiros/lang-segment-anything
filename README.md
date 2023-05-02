@@ -22,7 +22,7 @@ Language Segment-Anything is an open-source project that combines the power of i
 ### Installation
 
 ```
-pip install torch torchvison
+pip install torch torchvision
 pip install -U git+https://github.com/luca-medeiros/lang-segment-anything.git
 ```
 Or
@@ -30,7 +30,7 @@ Clone the repository and nstall the required packages:
 
 ```
 git clone https://github.com/luca-medeiros/lang-segment-anything && cd lang-segment-anything
-pip install torch torchvison
+pip install torch torchvision
 pip install -e .
 ```
 
