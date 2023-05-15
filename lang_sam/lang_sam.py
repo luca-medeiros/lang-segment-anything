@@ -1,5 +1,4 @@
 import os
-from urllib import request
 
 import groundingdino.datasets.transforms as T
 import numpy as np
