@@ -14,7 +14,7 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-case-conflict
       - id: check-added-large-files
-        args: ['--maxkb=350', '--enforce-all']
+        args: ['--maxkb=3500', '--enforce-all']
       - id: detect-private-key
 
   - repo: https://github.com/commitizen-tools/commitizen

@@ -25,6 +25,7 @@ Language Segment-Anything is an open-source project that combines the power of i
 pip install torch torchvision
 pip install -U git+https://github.com/luca-medeiros/lang-segment-anything.git
 ```
+
 Or
 Clone the repository and nstall the required packages:
 
@@ -43,12 +44,12 @@ To run the Lightning AI APP:
 Use as a library:
 
 ```python
-from  PIL  import  Image
+from PIL import Image
 from lang_sam import LangSAM
 
 model = LangSAM()
-image_pil = Image.open('./assets/car.jpeg').convert("RGB")
-text_prompt = 'wheel'
+image_pil = Image.open("./assets/car.jpeg").convert("RGB")
+text_prompt = "wheel"
 masks, boxes, phrases, logits = model.predict(image_pil, text_prompt)
 ```
 
