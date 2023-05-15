@@ -57,17 +57,14 @@ class LangSAM():
         self.build_sam(sam_type)
 
     def build_sam(self, sam_type):
-        url = SAM_MODELS[sam_type]
-        sam_checkpoint = os.path.join(CACHE_PATH, os.path.basename(url))
-        if not os.path.exists(sam_checkpoint):
-            if not os.path.exists(CACHE_PATH):
-                os.makedirs(CACHE_PATH)
-            request.urlretrieve(url, sam_checkpoint)
+        checkpoint_url = SAM_MODELS[sam_type]
         try:
-            sam = sam_model_registry[sam_type](checkpoint=sam_checkpoint)
+            sam = sam_model_registry[sam_type]()
+            state_dict = torch.hub.load_state_dict_from_url(checkpoint_url)
+            sam.load_state_dict(state_dict, strict=True)
         except:
             raise ValueError(f"Problem loading SAM please make sure you have the right model type: {sam_type} \
-                and a working checkpoint: {sam_checkpoint}. Recommend deleting the checkpoint and \
+                and a working checkpoint: {checkpoint_url}. Recommend deleting the checkpoint and \
                 re-downloading it.")
         sam.to(device=self.device)
         self.sam = SamPredictor(sam)
