@@ -34,6 +34,14 @@ git clone https://github.com/luca-medeiros/lang-segment-anything && cd lang-segm
 pip install torch torchvision
 pip install -e .
 ```
+Or use Conda
+Create a Conda environment from the `environment.yml` file:
+```
+conda env create -f environment.yml
+# Activate the new environment:
+conda activate lsa
+```
+
 
 ### Usage
 
