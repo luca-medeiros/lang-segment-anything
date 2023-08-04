@@ -49,11 +49,24 @@ def transform_image(image) -> torch.Tensor:
 
 class LangSAM():
 
-    def __init__(self, sam_type="vit_h"):
+    def __init__(self, sam_type="vit_h", ckpt_path=None):
         self.sam_type = sam_type
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.build_groundingdino()
-        self.build_sam(sam_type)
+        if ckpt_path == None:
+            self.build_sam(sam_type)
+        else:
+            self.build_sam_with_ckpt(sam_type, ckpt_path)
+
+    def build_sam_with_ckpt(self, sam_type, ckpt_path):
+        try:
+            sam = sam_model_registry[sam_type](ckpt_path)
+        except:
+            raise ValueError(f"Problem loading SAM. Your model type: {sam_type} \
+                should match your checkpoint path: {ckpt_path}. Recommend calling LangSAM \
+                using matching model type AND checkpoint path")
+        sam.to(device=self.device)
+        self.sam = SamPredictor(sam)
 
     def build_sam(self, sam_type):
         checkpoint_url = SAM_MODELS[sam_type]
