@@ -66,7 +66,7 @@ class LangSAM():
                 state_dict = torch.hub.load_state_dict_from_url(checkpoint_url)
                 sam.load_state_dict(state_dict, strict=True)
             except:
-                raise ValueError(f"Problem loading SAM please make sure you have the right model type: {sam_type} \
+                raise ValueError(f"Problem loading SAM please make sure you have the right model type: {self.sam_type} \
                     and a working checkpoint: {checkpoint_url}. Recommend deleting the checkpoint and \
                     re-downloading it.")
             sam.to(device=self.device)
@@ -75,7 +75,7 @@ class LangSAM():
             try:
                 sam = sam_model_registry[self.sam_type](ckpt_path)
             except:
-                raise ValueError(f"Problem loading SAM. Your model type: {sam_type} \
+                raise ValueError(f"Problem loading SAM. Your model type: {self.sam_type} \
                 should match your checkpoint path: {ckpt_path}. Recommend calling LangSAM \
                 using matching model type AND checkpoint path")
             sam.to(device=self.device)
