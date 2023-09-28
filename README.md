@@ -27,7 +27,7 @@ pip install -U git+https://github.com/luca-medeiros/lang-segment-anything.git
 ```
 
 Or
-Clone the repository and nstall the required packages:
+Clone the repository and install the required packages:
 
 ```
 git clone https://github.com/luca-medeiros/lang-segment-anything && cd lang-segment-anything
