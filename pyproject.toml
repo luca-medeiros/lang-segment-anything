@@ -16,7 +16,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.8, <3.11"
 gradio = "^3.24.1"
-huggingface-hub = "^0.13.4,<1"
+huggingface-hub = "^0.16.4"
 numpy = "^1.24.2"
 opencv_python = "^4.7.0.72"
 Pillow = "9.3.0"
