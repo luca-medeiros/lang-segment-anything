@@ -3,7 +3,7 @@ name = "lang-sam"
 version = "0.1.0"
 description = "Language segment-anything"
 readme = "README.md"
-documentation = "https://this/needs/to/be/something/otherwise/poetry/complains"
+documentation = "https://github.com/luca-medeiros/lang-segment-anything/blob/main/README.md"
 repository = "https://github.com/luca-medeiros/lang-segment-anything"
 authors = [
   "Luca Medeiros <lucamedeiros@outlook.com>",
