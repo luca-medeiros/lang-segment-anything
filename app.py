@@ -2,7 +2,7 @@ import os
 import warnings
 
 import gradio as gr
-import lightning as L
+from lightning.app import LightningApp
 import numpy as np
 from lightning.app.components.serve import ServeGradio
 from PIL import Image
@@ -73,4 +73,4 @@ class LitGradio(ServeGradio):
         return model
 
 
-app = L.LightningApp(LitGradio())
+app = LightningApp(LitGradio())

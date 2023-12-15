@@ -89,7 +89,6 @@ dependencies:
     - fsspec==2023.6.0
     - gradio==3.32.0
     - gradio-client==0.2.9
-    - groundingdino==0.1.0
     - h11==0.14.0
     - httpcore==0.17.3
     - httpx==0.24.1
@@ -103,7 +102,6 @@ dependencies:
     - jsonschema==4.18.2
     - jsonschema-specifications==2023.6.1
     - kiwisolver==1.4.4
-    - lang-sam==0.1.0
     - lightning==2.0.5
     - lightning-cloud==0.5.37
     - lightning-utilities==0.9.0
@@ -153,7 +151,6 @@ dependencies:
     - rich==13.4.2
     - rpds-py==0.8.10
     - safetensors==0.3.1
-    - segment-anything==1.0
     - semantic-version==2.10.0
     - sniffio==1.3.0
     - soupsieve==2.4.1
