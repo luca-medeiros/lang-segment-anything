@@ -30,3 +30,7 @@ Notice that generally inside the container you'll already have sudo already
 
     python running_test.py
 
+
+# If you edit the code, and wanna publish the changes:
+    git config --global user.name <username>
+    git config --global user.email <email>
