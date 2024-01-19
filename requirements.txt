@@ -1,2 +1,0 @@
-groundingdino-py
-segment-anything-py
