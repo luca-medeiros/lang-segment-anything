@@ -15,4 +15,8 @@ RUN apt install libglib2.0-0 -y
 RUN git clone https://github.com/kauevestena/lang-segment-anything.git
 WORKDIR $HOME/lang-segment-anything
 RUN pip install -e .
+
+# running the basic test,
+# then it will also be helding the weights inside the image,
+# so no "cold start"
 RUN python running_test.py
