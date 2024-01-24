@@ -44,19 +44,14 @@ conda activate lsa
 
 #### Docker Installation
 
-first buid the image:
+Build and run the image.
 
-```
-docker build --tag 'lang-segment-anything' .
-```
+	```
+	docker build --tag lang-segment-anything:latest .
+	docker run --gpus all -it lang-segment-anything:latest
+	```
 
-then run it (on windows use powershell):
 
-```
-docker run --name running-langsam --mount type=bind,source=D:\data,target=/workspace/data --gpus all -it 'lang-segment-anything' 
-```
-
-replace `D:\data` with the desired path for mounting a shared folder. If you wanna more than one running container, you can remove `--name running_deep_pavements`. Include `--detach` to run in background and `--rm` to remove on exit
 
 ### Usage
 
