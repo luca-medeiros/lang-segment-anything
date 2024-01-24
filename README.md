@@ -51,6 +51,7 @@ Build and run the image.
 	docker run --gpus all -it lang-segment-anything:latest
 	```
 
+If you want a shared folder you can add a volume with `-v <host_source_dir>:<container_dest_dir>` example: `-v ./data:/workspace/data`
 
 
 ### Usage
