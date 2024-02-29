@@ -5,6 +5,7 @@ import gradio as gr
 import lightning as L
 import numpy as np
 from lightning.app.components.serve import ServeGradio
+from lightning.app import LightningApp
 from PIL import Image
 
 from lang_sam import LangSAM
@@ -73,4 +74,4 @@ class LitGradio(ServeGradio):
         return model
 
 
-app = L.LightningApp(LitGradio())
+app = LightningApp(LitGradio())
