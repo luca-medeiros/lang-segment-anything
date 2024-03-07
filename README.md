@@ -58,7 +58,7 @@ If you want a shared folder you can add a volume with `-v <host_source_dir>:<con
 
 To run the Lightning AI APP:
 
-`lightning run app app.py`
+`lightning_app run app app.py`
 
 Use as a library:
 
