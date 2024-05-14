@@ -98,7 +98,7 @@ class LangSAM():
                                          remove_combined=self.return_prompts,
                                          device=self.device)
         W, H = image_pil.size
-        boxes = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H])
+        boxes = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H]).to(boxes.device)
 
         return boxes, logits, phrases
 
