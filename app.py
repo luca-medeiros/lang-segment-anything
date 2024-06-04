@@ -50,7 +50,7 @@ class LitGradio(ServeGradio):
         ],
     ]
 
-    def __init__(self, sam_type="vit_h"):
+    def __init__(self, sam_type="vit_h", gpu_index=0):
         super().__init__()
         self.ready = False
         self.sam_type = sam_type

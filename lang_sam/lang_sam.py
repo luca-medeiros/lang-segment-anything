@@ -49,10 +49,10 @@ def transform_image(image) -> torch.Tensor:
 
 class LangSAM():
 
-    def __init__(self, sam_type="vit_h", ckpt_path=None, return_prompts: bool = False):
+    def __init__(self, sam_type="vit_h", ckpt_path=None, return_prompts: bool = False, gpu_index: int = 0):
         self.sam_type = sam_type
         self.return_prompts = return_prompts
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device(f"cuda:{gpu_index}" if torch.cuda.is_available() else "cpu")
         self.build_groundingdino()
         self.build_sam(ckpt_path)
 
