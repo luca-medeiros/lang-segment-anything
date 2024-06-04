@@ -52,6 +52,7 @@ class LangSAM():
     def __init__(self, sam_type="vit_h", ckpt_path=None, return_prompts: bool = False, gpu_index: int = 0):
         self.sam_type = sam_type
         self.return_prompts = return_prompts
+        self.gpu_index = gpu_index
         self.device = torch.device(f"cuda:{gpu_index}" if torch.cuda.is_available() else "cpu")
         self.build_groundingdino()
         self.build_sam(ckpt_path)
@@ -86,7 +87,7 @@ class LangSAM():
         ckpt_repo_id = "ShilongLiu/GroundingDINO"
         ckpt_filename = "groundingdino_swinb_cogcoor.pth"
         ckpt_config_filename = "GroundingDINO_SwinB.cfg.py"
-        self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename)
+        self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename, device=self.device)
 
     def predict_dino(self, image_pil, text_prompt, box_threshold, text_threshold):
         image_trans = transform_image(image_pil)
