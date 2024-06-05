@@ -69,8 +69,8 @@ class LangSAM():
                 sam = sam_model_registry[self.sam_type]()
                 state_dict = torch.hub.load_state_dict_from_url(checkpoint_url)
                 sam.load_state_dict(state_dict, strict=True)
-            except:
-                raise ValueError(f"Problem loading SAM please make sure you have the right model type: {self.sam_type} \
+            except Exception as e:
+                raise ValueError(f"Problem loading SAM: {e}. Please make sure you have the right model type: {self.sam_type} \
                     and a working checkpoint: {checkpoint_url}. Recommend deleting the checkpoint and \
                     re-downloading it.")
             sam.to(device=self.device)
@@ -78,8 +78,8 @@ class LangSAM():
         else:
             try:
                 sam = sam_model_registry[self.sam_type](ckpt_path)
-            except:
-                raise ValueError(f"Problem loading SAM. Your model type: {self.sam_type} \
+            except Exception as e:
+                raise ValueError(f"Problem loading SAM: {e}. Your model type: {self.sam_type} \
                 should match your checkpoint path: {ckpt_path}. Recommend calling LangSAM \
                 using matching model type AND checkpoint path")
             sam.to(device=self.device)
@@ -93,6 +93,8 @@ class LangSAM():
 
     def predict_dino(self, image_pil, text_prompt, box_threshold, text_threshold):
         image_trans = transform_image(image_pil)
+        print(f"Transformed image shape: {image_trans.shape}")
+        print(f"Device: {self.device}")
         boxes, logits, phrases = predict(model=self.groundingdino,
                                          image=image_trans,
                                          caption=text_prompt,
@@ -109,6 +111,7 @@ class LangSAM():
         image_array = np.asarray(image_pil)
         self.sam.set_image(image_array)
         transformed_boxes = self.sam.transform.apply_boxes_torch(boxes, image_array.shape[:2])
+        print(f"Transformed boxes: {transformed_boxes}")
         masks, _, _ = self.sam.predict_torch(
             point_coords=None,
             point_labels=None,
@@ -118,9 +121,12 @@ class LangSAM():
         return masks.cpu()
 
     def predict(self, image_pil, text_prompt, box_threshold=0.3, text_threshold=0.25):
+        print("Running predict_dino...")
         boxes, logits, phrases = self.predict_dino(image_pil, text_prompt, box_threshold, text_threshold)
+        print(f"Boxes: {boxes}, Logits: {logits}, Phrases: {phrases}")
         masks = torch.tensor([])
         if len(boxes) > 0:
+            print("Running predict_sam...")
             masks = self.predict_sam(image_pil, boxes)
             masks = masks.squeeze(1)
         return masks, boxes, phrases, logits
