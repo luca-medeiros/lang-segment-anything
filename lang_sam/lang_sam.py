@@ -29,9 +29,12 @@ def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
     args.device = device
 
     cache_file = hf_hub_download(repo_id=repo_id, filename=filename)
-    checkpoint = torch.load(cache_file, map_location='cpu')
-    log = model.load_state_dict(clean_state_dict(checkpoint['model']), strict=False)
+    checkpoint = torch.load(cache_file, map_location=device)
+    state_dict = checkpoint['model']
+    clean_state_dict = {k: v for k, v in state_dict.items() if k in model.state_dict()}
+    log = model.load_state_dict(clean_state_dict, strict=False)
     print(f"Model loaded from {cache_file} \n => {log}")
+    model.to(device)
     model.eval()
     return model
 
@@ -49,10 +52,12 @@ def transform_image(image) -> torch.Tensor:
 
 class LangSAM():
 
-    def __init__(self, sam_type="vit_h", ckpt_path=None, return_prompts: bool = False):
+    def __init__(self, sam_type="vit_h", ckpt_path=None, return_prompts: bool = False, gpu_index: int = 0):
         self.sam_type = sam_type
         self.return_prompts = return_prompts
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.gpu_index = gpu_index
+        self.device = torch.device(f"cuda:{gpu_index}" if torch.cuda.is_available() else "cpu")
+        print(f'Using device {self.device}')
         self.build_groundingdino()
         self.build_sam(ckpt_path)
 
@@ -66,8 +71,8 @@ class LangSAM():
                 sam = sam_model_registry[self.sam_type]()
                 state_dict = torch.hub.load_state_dict_from_url(checkpoint_url)
                 sam.load_state_dict(state_dict, strict=True)
-            except:
-                raise ValueError(f"Problem loading SAM please make sure you have the right model type: {self.sam_type} \
+            except Exception as e:
+                raise ValueError(f"Problem loading SAM: {e}. Please make sure you have the right model type: {self.sam_type} \
                     and a working checkpoint: {checkpoint_url}. Recommend deleting the checkpoint and \
                     re-downloading it.")
             sam.to(device=self.device)
@@ -75,8 +80,8 @@ class LangSAM():
         else:
             try:
                 sam = sam_model_registry[self.sam_type](ckpt_path)
-            except:
-                raise ValueError(f"Problem loading SAM. Your model type: {self.sam_type} \
+            except Exception as e:
+                raise ValueError(f"Problem loading SAM: {e}. Your model type: {self.sam_type} \
                 should match your checkpoint path: {ckpt_path}. Recommend calling LangSAM \
                 using matching model type AND checkpoint path")
             sam.to(device=self.device)
@@ -86,17 +91,27 @@ class LangSAM():
         ckpt_repo_id = "ShilongLiu/GroundingDINO"
         ckpt_filename = "groundingdino_swinb_cogcoor.pth"
         ckpt_config_filename = "GroundingDINO_SwinB.cfg.py"
-        self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename)
+        self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename, device='cpu')
 
     def predict_dino(self, image_pil, text_prompt, box_threshold, text_threshold):
         image_trans = transform_image(image_pil)
-        boxes, logits, phrases = predict(model=self.groundingdino,
-                                         image=image_trans,
-                                         caption=text_prompt,
-                                         box_threshold=box_threshold,
-                                         text_threshold=text_threshold,
-                                         remove_combined=self.return_prompts,
-                                         device=self.device)
+        print(f"Transformed image shape: {image_trans.shape}")
+        print(f"Image tensor device: {image_trans.device}")
+        print(f"GroundingDINO model device: {next(self.groundingdino.parameters()).device}")
+
+        try:
+            boxes, logits, phrases = predict(model=self.groundingdino,
+                                             image=image_trans,
+                                             caption=text_prompt,
+                                             box_threshold=box_threshold,
+                                             text_threshold=text_threshold,
+                                             remove_combined=self.return_prompts,
+                                             device='cpu')
+            print(f"Boxes: {boxes}, Logits: {logits}, Phrases: {phrases}")
+        except Exception as e:
+            print(f"Error during predict: {e}")
+            raise
+
         W, H = image_pil.size
         boxes = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H]).to(boxes.device)
 
@@ -106,6 +121,7 @@ class LangSAM():
         image_array = np.asarray(image_pil)
         self.sam.set_image(image_array)
         transformed_boxes = self.sam.transform.apply_boxes_torch(boxes, image_array.shape[:2])
+        print(f"Transformed boxes: {transformed_boxes}")
         masks, _, _ = self.sam.predict_torch(
             point_coords=None,
             point_labels=None,
@@ -115,9 +131,12 @@ class LangSAM():
         return masks.cpu()
 
     def predict(self, image_pil, text_prompt, box_threshold=0.3, text_threshold=0.25):
+        print("Running predict_dino...")
         boxes, logits, phrases = self.predict_dino(image_pil, text_prompt, box_threshold, text_threshold)
+        print(f"Boxes: {boxes}, Logits: {logits}, Phrases: {phrases}")
         masks = torch.tensor([])
         if len(boxes) > 0:
+            print("Running predict_sam...")
             masks = self.predict_sam(image_pil, boxes)
             masks = masks.squeeze(1)
         return masks, boxes, phrases, logits
