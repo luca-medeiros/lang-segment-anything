@@ -34,6 +34,7 @@ def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
     clean_state_dict = {k: v for k, v in state_dict.items() if k in model.state_dict()}
     log = model.load_state_dict(clean_state_dict, strict=False)
     print(f"Model loaded from {cache_file} \n => {log}")
+    model.to(device)
     model.eval()
     return model
 
@@ -93,7 +94,7 @@ class LangSAM():
         self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename, device=self.device)
 
     def predict_dino(self, image_pil, text_prompt, box_threshold, text_threshold):
-        image_trans = transform_image(image_pil)
+        image_trans = transform_image(image_pil).to(self.device)
         print(f"Transformed image shape: {image_trans.shape}")
         print(f"Image tensor device: {image_trans.device}")
         print(f"GroundingDINO model device: {next(self.groundingdino.parameters()).device}")
