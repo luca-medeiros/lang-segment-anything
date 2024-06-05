@@ -94,14 +94,21 @@ class LangSAM():
     def predict_dino(self, image_pil, text_prompt, box_threshold, text_threshold):
         image_trans = transform_image(image_pil)
         print(f"Transformed image shape: {image_trans.shape}")
-        print(f"Device: {self.device}")
-        boxes, logits, phrases = predict(model=self.groundingdino,
-                                         image=image_trans,
-                                         caption=text_prompt,
-                                         box_threshold=box_threshold,
-                                         text_threshold=text_threshold,
-                                         remove_combined=self.return_prompts,
-                                         device=self.device)
+        print(f"Image tensor device: {image_trans.device}")
+        print(f"GroundingDINO model device: {next(self.groundingdino.parameters()).device}")
+
+        try:
+            boxes, logits, phrases = predict(model=self.groundingdino,
+                                             image=image_trans.to(self.device),
+                                             caption=text_prompt,
+                                             box_threshold=box_threshold,
+                                             text_threshold=text_threshold,
+                                             remove_combined=self.return_prompts,
+                                             device=self.device)
+        except Exception as e:
+            print(f"Error during predict: {e}")
+            raise
+
         W, H = image_pil.size
         boxes = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H]).to(boxes.device)
 
