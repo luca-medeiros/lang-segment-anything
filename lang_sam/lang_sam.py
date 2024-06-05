@@ -34,7 +34,6 @@ def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
     clean_state_dict = {k: v for k, v in state_dict.items() if k in model.state_dict()}
     log = model.load_state_dict(clean_state_dict, strict=False)
     print(f"Model loaded from {cache_file} \n => {log}")
-    model.to(device)
     model.eval()
     return model
 
@@ -106,7 +105,7 @@ class LangSAM():
                                              box_threshold=box_threshold,
                                              text_threshold=text_threshold,
                                              remove_combined=self.return_prompts,
-                                             device='cpu')
+                                             device=self.device)
             print(f"Boxes: {boxes}, Logits: {logits}, Phrases: {phrases}")
         except Exception as e:
             print(f"Error during predict: {e}")
