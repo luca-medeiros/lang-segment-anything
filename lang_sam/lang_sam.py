@@ -56,6 +56,7 @@ class LangSAM():
         self.return_prompts = return_prompts
         self.gpu_index = gpu_index
         self.device = torch.device(f"cuda:{gpu_index}" if torch.cuda.is_available() else "cpu")
+        print(f'Using device {self.device}')
         self.build_groundingdino()
         self.build_sam(ckpt_path)
 
@@ -105,6 +106,7 @@ class LangSAM():
                                              text_threshold=text_threshold,
                                              remove_combined=self.return_prompts,
                                              device=self.device)
+            print(f"Boxes: {boxes}, Logits: {logits}, Phrases: {phrases}")
         except Exception as e:
             print(f"Error during predict: {e}")
             raise
