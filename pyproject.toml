@@ -22,7 +22,7 @@ opencv_python = "^4.7.0.72"
 Pillow = "9.3.0"
 transformers = "^4.27.4"
 lightning = "^2.0.1"
-segment-anything = {git = "https://github.com/facebookresearch/segment-anything.git"}
+segment-anything = {git = "https://github.com/redefiningsurgery/segment-anything.git"}
 groundingdino = {git = "https://github.com/IDEA-Research/GroundingDINO.git"}
 
 [tool.poetry.group.dev.dependencies]
