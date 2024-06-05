@@ -91,22 +91,22 @@ class LangSAM():
         ckpt_repo_id = "ShilongLiu/GroundingDINO"
         ckpt_filename = "groundingdino_swinb_cogcoor.pth"
         ckpt_config_filename = "GroundingDINO_SwinB.cfg.py"
-        self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename, device=self.device)
+        self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename, device='cpu')
 
     def predict_dino(self, image_pil, text_prompt, box_threshold, text_threshold):
-        image_trans = transform_image(image_pil).to(self.device)
+        image_trans = transform_image(image_pil)
         print(f"Transformed image shape: {image_trans.shape}")
         print(f"Image tensor device: {image_trans.device}")
         print(f"GroundingDINO model device: {next(self.groundingdino.parameters()).device}")
 
         try:
             boxes, logits, phrases = predict(model=self.groundingdino,
-                                             image=image_trans.to(self.device),
+                                             image=image_trans,
                                              caption=text_prompt,
                                              box_threshold=box_threshold,
                                              text_threshold=text_threshold,
                                              remove_combined=self.return_prompts,
-                                             device=self.device)
+                                             device='cpu')
             print(f"Boxes: {boxes}, Logits: {logits}, Phrases: {phrases}")
         except Exception as e:
             print(f"Error during predict: {e}")
