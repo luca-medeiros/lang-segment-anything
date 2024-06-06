@@ -90,7 +90,7 @@ class LangSAM():
         ckpt_repo_id = "ShilongLiu/GroundingDINO"
         ckpt_filename = "groundingdino_swinb_cogcoor.pth"
         ckpt_config_filename = "GroundingDINO_SwinB.cfg.py"
-        self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename, device='cpu')
+        self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename, device=self.device)
 
     def predict_dino(self, image_pil, text_prompt, box_threshold, text_threshold):
         image_trans = transform_image(image_pil)
@@ -106,13 +106,14 @@ class LangSAM():
                                              text_threshold=text_threshold,
                                              remove_combined=self.return_prompts,
                                              device=self.device)
+            torch.cuda.empty_cache()
             print(f"Boxes: {boxes}, Logits: {logits}, Phrases: {phrases}")
         except Exception as e:
             print(f"Error during predict: {e}")
             raise
 
         W, H = image_pil.size
-        boxes = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H]).to(boxes.device)
+        boxes = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H], device='cpu')
 
         return boxes, logits, phrases
 
