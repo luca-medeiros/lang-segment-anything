@@ -113,7 +113,7 @@ class LangSAM():
             raise
 
         W, H = image_pil.size
-        boxes = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H], device='cpu')
+        boxes = box_ops.box_cxcywh_to_xyxy(boxes) * torch.tensor([W, H, W, H], device='cpu')
 
         return boxes, logits, phrases
 
