@@ -7,7 +7,6 @@ from groundingdino.models import build_model
 from groundingdino.util import box_ops
 from groundingdino.util.inference import predict
 from groundingdino.util.slconfig import SLConfig
-from groundingdino.util.utils import clean_state_dict
 from huggingface_hub import hf_hub_download
 from segment_anything import sam_model_registry
 from segment_anything import SamPredictor
@@ -25,8 +24,8 @@ def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
     cache_config_file = hf_hub_download(repo_id=repo_id, filename=ckpt_config_filename)
 
     args = SLConfig.fromfile(cache_config_file)
-    model = build_model(args)
     args.device = device
+    model = build_model(args)
 
     cache_file = hf_hub_download(repo_id=repo_id, filename=filename)
     checkpoint = torch.load(cache_file, map_location=device)
@@ -93,7 +92,7 @@ class LangSAM():
         self.groundingdino = load_model_hf(ckpt_repo_id, ckpt_filename, ckpt_config_filename, device=self.device)
 
     def predict_dino(self, image_pil, text_prompt, box_threshold, text_threshold):
-        image_trans = transform_image(image_pil)
+        image_trans = torch.tensor(transform_image(image_pil), device=self.device)
         print(f"Transformed image shape: {image_trans.shape}")
         print(f"Image tensor device: {image_trans.device}")
         print(f"GroundingDINO model device: {next(self.groundingdino.parameters()).device}")
@@ -105,7 +104,7 @@ class LangSAM():
                                              box_threshold=box_threshold,
                                              text_threshold=text_threshold,
                                              remove_combined=self.return_prompts,
-                                             device=self.device)
+                                             device=f"cuda:{self.gpu_index}")
             torch.cuda.empty_cache()
             print(f"Boxes: {boxes}, Logits: {logits}, Phrases: {phrases}")
         except Exception as e:
