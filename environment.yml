@@ -42,7 +42,7 @@ dependencies:
   - pygments=2.15.1=pyhd8ed1ab_0
   - python=3.10.14=hd12c33a_0_cpython
   - python-dateutil=2.8.2=pyhd8ed1ab_0
-  - python_abi=3.8=2_cp38
+  - python_abi=3.10=2_cp310
   - pyzmq=19.0.2=py38ha71036d_2
   - readline=8.2=h5eee18b_0
   - setuptools=67.8.0=py38h06a4308_0
