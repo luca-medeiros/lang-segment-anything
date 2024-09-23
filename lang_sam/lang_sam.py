@@ -5,9 +5,8 @@ from lang_sam.models.sam import SAM, SAM_MODELS
 
 
 class LangSAM:
-    def __init__(self, sam_type="sam2_hiera_small", ckpt_path: str | None = None, return_prompts: bool = False):
+    def __init__(self, sam_type="sam2_hiera_small", ckpt_path: str | None = None):
         self.sam_type = sam_type
-        self.return_prompts = return_prompts
         self.sam = SAM()
         self.sam.build_model(sam_type, ckpt_path)
         self.gdino = GDINO()
