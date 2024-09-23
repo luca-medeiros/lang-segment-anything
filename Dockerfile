@@ -1,31 +1,24 @@
-FROM pytorch/pytorch:latest
+FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
 
-# prevent apt from hanging
-ARG DEBIAN_FRONTEND=noninteractive
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV GRADIO_SERVER_NAME="0.0.0.0"
 
-# create workspace
-ENV HOME /workspace
-WORKDIR $HOME
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    openssh-client \
+    build-essential \
+    git
 
-# dependency: lang-segment-anything
-RUN apt update
-
-# installing system dependencies:
-RUN apt install -y git
-RUN apt install libgl1-mesa-glx -y
-RUN apt install libglib2.0-0 -y
-
-# copy source code:
-COPY . $HOME/lang-segment-anything
+COPY . /lang-segment-anything
 
 # installing python dependencies:
-WORKDIR $HOME/lang-segment-anything
-RUN pip install -e .
+WORKDIR /lang-segment-anything
+RUN pip install -r requirements.txt
 
-# running the basic test,
-# then it will held the weights inside the image,
-# so no "cold start"
-RUN python running_test.py
+EXPOSE 8000
 
-# running the app:
-CMD ["lightning", "run", "app", "app.py"]
+# Entry point
+CMD ["python", "app.py"]

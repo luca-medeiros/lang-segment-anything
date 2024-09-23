@@ -1,4 +1,4 @@
-[tool.poetry]
+[project]
 name = "lang-sam"
 version = "0.1.0"
 description = "Language segment-anything"
@@ -6,36 +6,24 @@ readme = "README.md"
 documentation = "https://github.com/luca-medeiros/lang-segment-anything/blob/main/README.md"
 repository = "https://github.com/luca-medeiros/lang-segment-anything"
 authors = [
-  "Luca Medeiros <lucamedeiros@outlook.com>",
+  { name = "Luca Medeiros", email = "lucamedeiros@outlook.com" },
 ]
-license = ""
 packages = [
     { include = "lang_sam" },
 ]
+requires-python = ">=3.11"
+dynamic = ["dependencies"]
 
-[tool.poetry.dependencies]
-python = "^3.8, <3.11"
-gradio = "^3.24.1"
-huggingface-hub = "^0.23.5"
-numpy = "^1.24.2"
-opencv_python = "^4.7.0.72"
-Pillow = "9.4.0"
-transformers = "^4.42.4"
-lightning = "^2.3.3"
-segment-anything = {git = "https://github.com/facebookresearch/segment-anything.git"}
-groundingdino = {git = "https://github.com/IDEA-Research/GroundingDINO.git"}
-
-[tool.poetry.group.dev.dependencies]
-pre-commit = "^2.20.0"
-commitizen = "2.27.0"
-pytest = "^7.1.2"
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
 
 [build-system]
-requires = ["poetry-core >= 1.4.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py311"
 line-length = 120
 fix = true
 select = [
