@@ -22,14 +22,15 @@ class GDINO:
 
     def predict(
         self,
-        pil_image: Image.Image,
-        text_prompt: str,
+        pil_images: list[Image.Image],
+        text_prompt: list[str],
         box_threshold: float,
         text_threshold: float,
-    ):
-        if text_prompt[-1] != ".":
-            text_prompt += "."
-        inputs = self.processor(images=pil_image, text=text_prompt, return_tensors="pt").to(DEVICE)
+    ) -> list[dict]:
+        for i, prompt in enumerate(text_prompt):
+            if prompt[-1] != ".":
+                text_prompt[i] += "."
+        inputs = self.processor(images=pil_images, text=text_prompt, return_tensors="pt").to(DEVICE)
         with torch.no_grad():
             outputs = self.model(**inputs)
 
@@ -38,15 +39,18 @@ class GDINO:
             inputs.input_ids,
             box_threshold=box_threshold,
             text_threshold=text_threshold,
-            target_sizes=[pil_image.size[::-1]],
+            target_sizes=[k.size[::-1] for k in pil_images],
         )
-        return results[0]
+        return results
 
-    def predict_batch(
-        self,
-        pil_images: list[Image.Image],
-        text_prompt: str,
-        box_threshold: float,
-        text_threshold: float,
-    ):
-        raise NotImplementedError("GDINO does not support batch prediction yet")
+
+if __name__ == "__main__":
+    gdino = GDINO()
+    gdino.build_model()
+    out = gdino.predict(
+        [Image.open("./assets/car.jpeg"), Image.open("./assets/car.jpeg")],
+        ["wheel", "wheel"],
+        0.3,
+        0.25,
+    )
+    print(out)
