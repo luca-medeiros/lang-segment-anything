@@ -13,7 +13,7 @@ def load_image(image_path: str):
 def draw_image(image_rgb, masks, xyxy, probs, labels):
     box_annotator = sv.BoxCornerAnnotator()
     label_annotator = sv.LabelAnnotator()
-    mask_annotator = sv.PolygonAnnotator()
+    mask_annotator = sv.MaskAnnotator()
     # Create class_id for each unique label
     unique_labels = list(set(labels))
     class_id_map = {label: idx for idx, label in enumerate(unique_labels)}
