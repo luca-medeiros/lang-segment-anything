@@ -87,12 +87,14 @@ class SAM:
 
     def predict_batch(
         self,
-        images_rgb: list,
-        xyxy: list,
+        images_rgb: list[np.ndarray],
+        xyxy: list[np.ndarray],
     ) -> tuple[list[np.ndarray], list[np.ndarray], list[np.ndarray]]:
         self.predictor.set_image_batch(images_rgb)
 
         masks, scores, logits = self.predictor.predict_batch(box_batch=xyxy, multimask_output=False)
 
-        masks = [np.squeeze(mask) for mask in masks]
+        masks = [np.squeeze(mask, axis=1) if len(mask.shape) > 3 else mask for mask in masks]
+        scores = [np.squeeze(score) for score in scores]
+        logits = [np.squeeze(logit, axis=1) if len(logit.shape) > 3 else logit for logit in logits]
         return masks, scores, logits

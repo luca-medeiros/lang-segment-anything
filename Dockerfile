@@ -14,11 +14,11 @@ RUN apt-get update && apt-get install -y \
 
 COPY . /lang-segment-anything
 
-# installing python dependencies:
+# Install dependencies
 WORKDIR /lang-segment-anything
 RUN pip install -r requirements.txt
 
 EXPOSE 8000
 
 # Entry point
-CMD ["python", "app.py"]
+CMD ["python3", "app.py"]

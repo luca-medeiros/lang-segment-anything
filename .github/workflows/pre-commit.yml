@@ -1,0 +1,29 @@
+name: pre-commit
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+        with:
+          files: '**/*.py'
+
+      - name: Set up Python [3.11]
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.11"
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit on changed files
+        run: |
+          pre-commit run --files ${{ steps.changed-files.outputs.all_changed_files }}
