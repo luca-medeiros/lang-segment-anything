@@ -1,0 +1,14 @@
+gradio==5.0.2
+litserve==0.2.3
+opencv-python-headless==4.10.0.84
+pydantic==2.9.2
+sam-2 @ git+https://github.com/facebookresearch/segment-anything-2@7e1596c0b6462eb1d1ba7e1492430fed95023598
+supervision==0.23.0 ; python_full_version > '3.10'
+transformers==4.44.2
+uvloop==0.20.0
+
+
+--extra-index-url https://download.pytorch.org/whl/cu124
+torch==2.4.1
+--extra-index-url https://download.pytorch.org/whl/cu124
+torchvision==0.19.1

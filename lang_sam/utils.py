@@ -1,9 +1,7 @@
 import cv2
 import numpy as np
-import torch
+import supervision as sv
 from PIL import Image
-from torchvision.utils import draw_bounding_boxes
-from torchvision.utils import draw_segmentation_masks
 
 MIN_AREA = 100
 
@@ -12,13 +10,26 @@ def load_image(image_path: str):
     return Image.open(image_path).convert("RGB")
 
 
-def draw_image(image, masks, boxes, labels, alpha=0.4):
-    image = torch.from_numpy(image).permute(2, 0, 1)
-    if len(boxes) > 0:
-        image = draw_bounding_boxes(image, boxes, colors=['red'] * len(boxes), labels=labels, width=2)
-    if len(masks) > 0:
-        image = draw_segmentation_masks(image, masks=masks, colors=['cyan'] * len(masks), alpha=alpha)
-    return image.numpy().transpose(1, 2, 0)
+def draw_image(image_rgb, masks, xyxy, probs, labels):
+    box_annotator = sv.BoxCornerAnnotator()
+    label_annotator = sv.LabelAnnotator()
+    mask_annotator = sv.MaskAnnotator()
+    # Create class_id for each unique label
+    unique_labels = list(set(labels))
+    class_id_map = {label: idx for idx, label in enumerate(unique_labels)}
+    class_id = [class_id_map[label] for label in labels]
+
+    # Add class_id to the Detections object
+    detections = sv.Detections(
+        xyxy=xyxy,
+        mask=masks.astype(bool),
+        confidence=probs,
+        class_id=np.array(class_id),
+    )
+    annotated_image = box_annotator.annotate(scene=image_rgb.copy(), detections=detections)
+    annotated_image = label_annotator.annotate(scene=annotated_image, detections=detections, labels=labels)
+    annotated_image = mask_annotator.annotate(scene=annotated_image, detections=detections)
+    return annotated_image
 
 
 def get_contours(mask):
@@ -64,7 +75,7 @@ def generate_labelme_json(binary_masks, labels, image_size, image_path=None):
         "imagePath": image_path,
         "flags": {},
         "shapes": [],
-        "imageData": None
+        "imageData": None,
     }
 
     # Loop through the masks and add them to the JSON dictionary
@@ -80,7 +91,7 @@ def generate_labelme_json(binary_masks, labels, image_size, image_path=None):
                 "line_color": None,
                 "fill_color": None,
                 "points": points,
-                "shape_type": "polygon"
+                "shape_type": "polygon",
             }
 
             json_dict["shapes"].append(shape_dict)

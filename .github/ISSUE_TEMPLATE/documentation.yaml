@@ -1,0 +1,26 @@
+name: 📚 Documentation Issue
+description: Report a problem about existing documentation or comments.
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📚 Documentation Issue
+        
+        This issue category is for problems about existing documentation, not for asking how-to questions.
+
+  - type: input
+    attributes:
+      label: Provide a link to existing documentation/comment
+      description: Paste the URL or path to the documentation or comment that has an issue.
+      placeholder: "https://example.com/docs/section"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: How should the above documentation/comment improve?
+      description: Describe the changes or improvements that should be made to the documentation or comment.
+      placeholder: "Please describe the suggested improvements here."
+    validations:
+      required: true

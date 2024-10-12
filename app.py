@@ -1,76 +1,98 @@
 import os
-import warnings
+from io import BytesIO
 
 import gradio as gr
-import lightning as L
-import numpy as np
-from lightning.app.components.serve import ServeGradio
+import requests
 from PIL import Image
 
-from lang_sam import LangSAM
 from lang_sam import SAM_MODELS
-from lang_sam.utils import draw_image
-from lang_sam.utils import load_image
-
-warnings.filterwarnings("ignore")
+from lang_sam.server import PORT, server
 
 
-class LitGradio(ServeGradio):
+def inference(sam_type, box_threshold, text_threshold, image, text_prompt):
+    """Gradio function that makes a request to the /predict LitServe endpoint."""
+    url = f"http://localhost:{PORT}/predict"  # Adjust port if needed
 
-    inputs = [
-        gr.Dropdown(choices=list(SAM_MODELS.keys()), label="SAM model", value="vit_h"),
-        gr.Slider(0, 1, value=0.3, label="Box threshold"),
-        gr.Slider(0, 1, value=0.25, label="Text threshold"),
-        gr.Image(type="filepath", label='Image'),
-        gr.Textbox(lines=1, label="Text Prompt"),
-    ]
-    outputs = [gr.outputs.Image(type="pil", label="Output Image")]
+    # Prepare the multipart form data
+    with open(image, "rb") as img_file:
+        files = {
+            "image": img_file,
+        }
+        data = {
+            "sam_type": sam_type,
+            "box_threshold": str(box_threshold),
+            "text_threshold": str(text_threshold),
+            "text_prompt": text_prompt,
+        }
+
+        try:
+            response = requests.post(url, files=files, data=data)
+        except Exception as e:
+            print(f"Request failed: {e}")
+            return None
+
+    if response.status_code == 200:
+        try:
+            output_image = Image.open(BytesIO(response.content)).convert("RGB")
+            return output_image
+        except Exception as e:
+            print(f"Failed to process response image: {e}")
+            return None
+    else:
+        print(f"Request failed with status code {response.status_code}: {response.text}")
+        return None
+
+
+with gr.Blocks(title="lang-sam") as blocks:
+    with gr.Row():
+        sam_model_choices = gr.Dropdown(choices=list(SAM_MODELS.keys()), label="SAM Model", value="sam2_hiera_small")
+        box_threshold = gr.Slider(minimum=0.0, maximum=1.0, value=0.3, label="Box Threshold")
+        text_threshold = gr.Slider(minimum=0.0, maximum=1.0, value=0.25, label="Text Threshold")
+    with gr.Row():
+        image_input = gr.Image(type="filepath", label="Input Image")
+        output_image = gr.Image(type="pil", label="Output Image")
+    text_prompt = gr.Textbox(lines=1, label="Text Prompt")
+
+    submit_btn = gr.Button("Run Prediction")
+
+    submit_btn.click(
+        fn=inference,
+        inputs=[sam_model_choices, box_threshold, text_threshold, image_input, text_prompt],
+        outputs=output_image,
+    )
 
     examples = [
         [
-            'vit_h',
-            0.36,
+            "sam2_hiera_small",
+            0.32,
             0.25,
             os.path.join(os.path.dirname(__file__), "assets", "fruits.jpg"),
-            "kiwi",
+            "kiwi. watermelon. blueberry.",
         ],
         [
-            'vit_h',
+            "sam2_hiera_small",
             0.3,
             0.25,
             os.path.join(os.path.dirname(__file__), "assets", "car.jpeg"),
-            "wheel",
+            "wheel.",
         ],
         [
-            'vit_h',
+            "sam2_hiera_small",
             0.3,
             0.25,
             os.path.join(os.path.dirname(__file__), "assets", "food.jpg"),
-            "food",
+            "food.",
         ],
     ]
 
-    def __init__(self, sam_type="vit_h"):
-        super().__init__()
-        self.ready = False
-        self.sam_type = sam_type
+    gr.Examples(
+        examples=examples,
+        inputs=[sam_model_choices, box_threshold, text_threshold, image_input, text_prompt],
+        outputs=output_image,
+    )
 
-    def predict(self, sam_type, box_threshold, text_threshold, image_path, text_prompt):
-        print("Predicting... ", sam_type, box_threshold, text_threshold, image_path, text_prompt)
-        if sam_type != self.model.sam_type:
-            self.model.build_sam(sam_type)
-        image_pil = load_image(image_path)
-        masks, boxes, phrases, logits = self.model.predict(image_pil, text_prompt, box_threshold, text_threshold)
-        labels = [f"{phrase} {logit:.2f}" for phrase, logit in zip(phrases, logits)]
-        image_array = np.asarray(image_pil)
-        image = draw_image(image_array, masks, boxes, labels)
-        image = Image.fromarray(np.uint8(image)).convert("RGB")
-        return image
+server.app = gr.mount_gradio_app(server.app, blocks, path="/gradio")
 
-    def build_model(self, sam_type="vit_h"):
-        model = LangSAM(sam_type)
-        self.ready = True
-        return model
-
-
-app = L.LightningApp(LitGradio())
+if __name__ == "__main__":
+    print(f"Starting LitServe and Gradio server on port {PORT}...")
+    server.run(port=PORT)
