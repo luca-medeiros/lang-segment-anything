@@ -2,8 +2,11 @@ import numpy as np
 import torch
 from PIL import Image
 from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
+from lang_sam.models.utils import get_device_type
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device_type = get_device_type()
+DEVICE = torch.device(device_type)
+
 if torch.cuda.is_available():
     torch.autocast(device_type="cuda", dtype=torch.bfloat16).__enter__()
     if torch.cuda.get_device_properties(0).major >= 8:
@@ -18,7 +21,9 @@ class GDINO:
     def build_model(self, ckpt_path: str | None = None):
         model_id = "IDEA-Research/grounding-dino-base"
         self.processor = AutoProcessor.from_pretrained(model_id)
-        self.model = AutoModelForZeroShotObjectDetection.from_pretrained(model_id).to(DEVICE)
+        self.model = AutoModelForZeroShotObjectDetection.from_pretrained(model_id).to(
+            DEVICE
+        )
 
     def predict(
         self,
