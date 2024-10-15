@@ -32,7 +32,7 @@ repos:
         name: Upgrade code
 
   - repo: https://github.com/myint/docformatter
-    rev: v1.4
+    rev: 06907d0267368b49b9180eed423fae5697c1e909 # todo: fix for docformatter after last 1.7.5
     hooks:
       - id: docformatter
         args: [--in-place, --wrap-summaries=115, --wrap-descriptions=120]
