@@ -23,7 +23,7 @@ Pillow = "9.4.0"
 transformers = "^4.42.4"
 lightning = "^2.3.3"
 segment-anything = {git = "https://github.com/facebookresearch/segment-anything.git"}
-groundingdino = {git = "https://github.com/IDEA-Research/GroundingDINO.git"}
+groundingdino = {git = "https://github.com/IDEA-Research/GroundingDINO.git/2b62f419c292ca9c518daae55512fabc3fead4a4"}
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.20.0"
