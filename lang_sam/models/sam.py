@@ -5,8 +5,10 @@ from hydra.utils import instantiate
 from omegaconf import OmegaConf
 from sam2.automatic_mask_generator import SAM2AutomaticMaskGenerator
 from sam2.sam2_image_predictor import SAM2ImagePredictor
+from lang_sam.models.utils import get_device_type
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device(get_device_type())
+
 if torch.cuda.is_available():
     torch.autocast(device_type="cuda", dtype=torch.bfloat16).__enter__()
     if torch.cuda.get_device_properties(0).major >= 8:
