@@ -20,8 +20,7 @@ class LangSAM:
         box_threshold: float = 0.3,
         text_threshold: float = 0.25,
     ):
-        """
-        Predicts masks for given images and text prompts using GDINO and SAM models.
+        """Predicts masks for given images and text prompts using GDINO and SAM models.
 
         Parameters:
             images_pil (list[Image.Image]): List of input images.

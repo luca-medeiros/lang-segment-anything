@@ -43,7 +43,6 @@ docker build --tag lang-segment-anything:latest .
 docker run --gpus all -p 8000:8000 lang-segment-anything:latest
 ```
 
-
 ### Usage
 
 To run the gradio APP:
@@ -68,7 +67,6 @@ results = model.predict([image_pil], [text_prompt])
 ![car.png](/assets/outputs/car.png)
 
 ![fruits.png](/assets/outputs/fruits.png)
-
 
 ## Acknowledgments
 

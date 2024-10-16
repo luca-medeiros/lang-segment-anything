@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         ## 📚 Documentation Issue
-        
+
         This issue category is for problems about existing documentation, not for asking how-to questions.
 
   - type: input

@@ -1,7 +1,7 @@
-import numpy as np
 import torch
 from PIL import Image
 from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
+
 from lang_sam.models.utils import get_device_type
 
 device_type = get_device_type()
