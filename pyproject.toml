@@ -18,9 +18,12 @@ dynamic = ["dependencies"]
 dependencies = {file = ["requirements.txt"]}
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+packages = ["lang_sam"]
+include_package_data = true
 
 [tool.ruff]
 target-version = "py311"
