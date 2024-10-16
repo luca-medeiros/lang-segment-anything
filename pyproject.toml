@@ -18,7 +18,7 @@ dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["lang_sam"]
+include = ["lang_sam", "lang_sam.*"]
 
 [tool.ruff]
 target-version = "py311"
