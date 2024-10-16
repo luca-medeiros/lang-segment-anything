@@ -5,6 +5,7 @@ from hydra.utils import instantiate
 from omegaconf import OmegaConf
 from sam2.automatic_mask_generator import SAM2AutomaticMaskGenerator
 from sam2.sam2_image_predictor import SAM2ImagePredictor
+
 from lang_sam.models.utils import get_device_type
 
 DEVICE = torch.device(get_device_type())

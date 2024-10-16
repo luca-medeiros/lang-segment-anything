@@ -1,15 +1,14 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "lang-sam"
 version = "0.1.0"
 description = "Language segment-anything"
 readme = "README.md"
-documentation = "https://github.com/luca-medeiros/lang-segment-anything/blob/main/README.md"
-repository = "https://github.com/luca-medeiros/lang-segment-anything"
 authors = [
   { name = "Luca Medeiros", email = "lucamedeiros@outlook.com" },
-]
-packages = [
-    { include = "lang_sam" },
 ]
 requires-python = ">=3.11"
 dynamic = ["dependencies"]
@@ -17,10 +16,9 @@ dynamic = ["dependencies"]
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["lang_sam", "lang_sam.*"]
 
 [tool.ruff]
 target-version = "py311"

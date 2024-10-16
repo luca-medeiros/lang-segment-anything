@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         ## 🚀 Feature
-        
+
         A clear and concise description of the feature proposal.
 
   - type: textarea
@@ -25,6 +25,6 @@ body:
     attributes:
       value: |
         ## Note
-        
+
         We only consider adding new features if they are relevant to this library.
         Consider if this new feature deserves to be here or should be a new library.

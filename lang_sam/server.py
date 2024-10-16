@@ -18,8 +18,7 @@ class LangSAMAPI(ls.LitAPI):
         print("LangSAM model initialized.")
 
     def decode_request(self, request) -> dict:
-        """
-        Decode the incoming request to extract parameters and image bytes.
+        """Decode the incoming request to extract parameters and image bytes.
 
         Assumes the request is sent as multipart/form-data with fields:
         - sam_type: str
@@ -50,15 +49,17 @@ class LangSAMAPI(ls.LitAPI):
         }
 
     def predict(self, inputs: dict) -> dict:
-        """
-        Perform prediction using the LangSAM model.
+        """Perform prediction using the LangSAM model.
 
         Yields:
             dict: Contains the processed output image.
         """
         print("Starting prediction with parameters:")
         print(
-            f"sam_type: {inputs['sam_type']}, box_threshold: {inputs['box_threshold']}, text_threshold: {inputs['text_threshold']}, text_prompt: {inputs['text_prompt']}"
+            f"sam_type: {inputs['sam_type']}, \
+                box_threshold: {inputs['box_threshold']}, \
+                text_threshold: {inputs['text_threshold']}, \
+                text_prompt: {inputs['text_prompt']}"
         )
 
         if inputs["sam_type"] != self.model.sam_type:
@@ -96,8 +97,7 @@ class LangSAMAPI(ls.LitAPI):
         return {"output_image": output_image}
 
     def encode_response(self, output: dict) -> Response:
-        """
-        Encode the prediction result into an HTTP response.
+        """Encode the prediction result into an HTTP response.
 
         Returns:
             Response: Contains the processed image in PNG format.
