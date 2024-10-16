@@ -26,9 +26,12 @@ Language Segment-Anything is an open-source project that combines the power of i
 Before installing `lang-sam`, please install PyTorch using the following command:
 
 ```bash
+
 pip install torch==2.4.1 torchvision==0.19.1 --extra-index-url https://download.pytorch.org/whl/cu124
 
 ```
+
+```bash
 
 pip install -U git+https://github.com/luca-medeiros/lang-segment-anything.git
 
@@ -37,7 +40,7 @@ pip install -U git+https://github.com/luca-medeiros/lang-segment-anything.git
 Or
 Clone the repository and install the required packages:
 
-```
+```bash
 
 git clone https://github.com/luca-medeiros/lang-segment-anything && cd lang-segment-anything
 pip install -e .
@@ -48,13 +51,13 @@ pip install -e .
 
 Build and run the image.
 
-```
+```bash
 
 git clone https://github.com/luca-medeiros/lang-segment-anything && cd lang-segment-anything
 docker build --tag lang-segment-anything:latest .
 docker run --gpus all -p 8000:8000 lang-segment-anything:latest
 
-````
+```
 
 ### Usage
 
@@ -73,7 +76,7 @@ model = LangSAM()
 image_pil = Image.open("./assets/car.jpeg").convert("RGB")
 text_prompt = "wheel."
 results = model.predict([image_pil], [text_prompt])
-````
+```
 
 ## Examples
 
