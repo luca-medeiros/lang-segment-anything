@@ -18,21 +18,21 @@ if torch.cuda.is_available():
 
 
 SAM_MODELS = {
-    "sam2_hiera_tiny": {
-        "url": "https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_tiny.pt",
-        "config": "sam2_hiera_t.yaml",
+    "sam2.1_hiera_tiny": {
+        "url": "https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_tiny.pt",
+        "config": "configs/sam2.1/sam2.1_hiera_t.yaml",
     },
-    "sam2_hiera_small": {
-        "url": "https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_small.pt",
-        "config": "sam2_hiera_s.yaml",
+    "sam2.1_hiera_small": {
+        "url": "https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_small.pt",
+        "config": "configs/sam2.1/sam2.1_hiera_s.yaml",
     },
-    "sam2_hiera_base_plus": {
-        "url": "https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_base_plus.pt",
-        "config": "sam2_hiera_b+.yaml",
+    "sam2.1_hiera_base_plus": {
+        "url": "https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_base_plus.pt",
+        "config": "configs/sam2.1/sam2.1_hiera_b+.yaml",
     },
-    "sam2_hiera_large": {
-        "url": "https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_large.pt",
-        "config": "sam2_hiera_l.yaml",
+    "sam2.1_hiera_large": {
+        "url": "https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_large.pt",
+        "config": "configs/sam2.1/sam2.1_hiera_l.yaml",
     },
 }
 
