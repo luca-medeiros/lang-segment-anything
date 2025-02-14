@@ -5,9 +5,6 @@ from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
 from lang_sam.models.utils import DEVICE
 
 class GDINO:
-    def __init__(self):
-        self.build_model()
-
     def build_model(self, ckpt_path: str | None = None):
         model_id = "IDEA-Research/grounding-dino-base"
         self.processor = AutoProcessor.from_pretrained(model_id)
@@ -17,15 +14,15 @@ class GDINO:
 
     def predict(
         self,
-        pil_images: list[Image.Image],
-        text_prompt: list[str],
+        images_pil: list[Image.Image],
+        texts_prompt: list[str],
         box_threshold: float,
         text_threshold: float,
     ) -> list[dict]:
-        for i, prompt in enumerate(text_prompt):
+        for i, prompt in enumerate(texts_prompt):
             if prompt[-1] != ".":
-                text_prompt[i] += "."
-        inputs = self.processor(images=pil_images, text=text_prompt, return_tensors="pt").to(DEVICE)
+                texts_prompt[i] += "."
+        inputs = self.processor(images=images_pil, text=texts_prompt, return_tensors="pt").to(DEVICE)
         with torch.no_grad():
             outputs = self.model(**inputs)
 
@@ -34,7 +31,7 @@ class GDINO:
             inputs.input_ids,
             box_threshold=box_threshold,
             text_threshold=text_threshold,
-            target_sizes=[k.size[::-1] for k in pil_images],
+            target_sizes=[k.size[::-1] for k in images_pil],
         )
         return results
 
