@@ -45,6 +45,7 @@ class LangSAM:
         sam_boxes = []
         sam_indices = []
         for idx, result in enumerate(gdino_results):
+            result = {k: (v.cpu().numpy() if hasattr(v, "numpy") else v) for k, v in result.items()}
             processed_result = {
                 **result,
                 "masks": [],
@@ -52,8 +53,6 @@ class LangSAM:
             }
 
             if result["labels"]:
-                processed_result["boxes"] = result["boxes"].cpu().numpy()
-                processed_result["scores"] = result["scores"].cpu().numpy()
                 sam_images.append(np.asarray(images_pil[idx]))
                 sam_boxes.append(processed_result["boxes"])
                 sam_indices.append(idx)
