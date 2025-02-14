@@ -5,11 +5,11 @@ from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
 from lang_sam.models.utils import DEVICE
 
 class GDINO:
-    def build_model(self, ckpt_path: str | None = None):
-        model_id = "IDEA-Research/grounding-dino-base"
+    def build_model(self, ckpt_path: str | None = None, device=DEVICE):
+        model_id = "IDEA-Research/grounding-dino-base" if ckpt_path is None else ckpt_path
         self.processor = AutoProcessor.from_pretrained(model_id)
         self.model = AutoModelForZeroShotObjectDetection.from_pretrained(model_id).to(
-            DEVICE
+            device
         )
 
     def predict(
@@ -22,7 +22,7 @@ class GDINO:
         for i, prompt in enumerate(texts_prompt):
             if prompt[-1] != ".":
                 texts_prompt[i] += "."
-        inputs = self.processor(images=images_pil, text=texts_prompt, return_tensors="pt").to(DEVICE)
+        inputs = self.processor(images=images_pil, text=texts_prompt, return_tensors="pt").to(self.model.device)
         with torch.no_grad():
             outputs = self.model(**inputs)
 

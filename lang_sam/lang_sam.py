@@ -3,15 +3,17 @@ from PIL import Image
 
 from lang_sam.models.gdino import GDINO
 from lang_sam.models.sam import SAM
+from lang_sam.models.utils import DEVICE
 
 
 class LangSAM:
-    def __init__(self, sam_type="sam2.1_hiera_small", ckpt_path: str | None = None):
+    def __init__(self, sam_type="sam2.1_hiera_small", ckpt_path: str | None = None, device=DEVICE):
         self.sam_type = sam_type
+
         self.sam = SAM()
-        self.sam.build_model(sam_type, ckpt_path)
+        self.sam.build_model(sam_type, ckpt_path, device=device)
         self.gdino = GDINO()
-        self.gdino.build_model()
+        self.gdino.build_model(device=device)
 
     def predict(
         self,

@@ -14,7 +14,7 @@ PORT = 8000
 class LangSAMAPI(ls.LitAPI):
     def setup(self, device: str) -> None:
         """Initialize or load the LangSAM model."""
-        self.model = LangSAM(sam_type="sam2.1_hiera_small")
+        self.model = LangSAM(sam_type="sam2.1_hiera_small", device=device)
         print("LangSAM model initialized.")
 
     def decode_request(self, request) -> dict:
