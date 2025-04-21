@@ -51,9 +51,11 @@ class SAM:
         try:
             model.load_state_dict(state_dict, strict=True)
         except Exception as e:
-            raise ValueError(f"Problem loading SAM please make sure you have the right model type: {self.sam_type} \
+            raise ValueError(
+                f"Problem loading SAM please make sure you have the right model type: {self.sam_type} \
                 and a working checkpoint: {checkpoint_url}. Recommend deleting the checkpoint and \
-                re-downloading it. Error: {e}")
+                re-downloading it. Error: {e}"
+            )
 
     def generate(self, image_rgb: np.ndarray) -> list[dict]:
         """
