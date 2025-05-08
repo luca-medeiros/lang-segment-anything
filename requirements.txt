@@ -1,4 +1,4 @@
-gradio==5.0.2
+gradio==5.29.0
 litserve==0.2.8
 opencv-python-headless==4.10.0.84
 pydantic>=2.9.2
