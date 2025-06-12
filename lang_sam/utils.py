@@ -11,9 +11,21 @@ def load_image(image_path: str):
 
 
 def draw_image(image_rgb, masks, xyxy, probs, labels):
+    # Handle case where no masks are detected
+    if len(masks) == 0 or len(xyxy) == 0 or len(probs) == 0 or len(labels) == 0:
+        return image_rgb.copy()
+        
     box_annotator = sv.BoxCornerAnnotator()
     label_annotator = sv.LabelAnnotator()
     mask_annotator = sv.MaskAnnotator()
+    
+    # Convert masks to numpy array if it's a list
+    if isinstance(masks, list):
+        if len(masks) > 0:
+            masks = np.array(masks)
+        else:
+            return image_rgb.copy()
+    
     # Create class_id for each unique label
     unique_labels = list(set(labels))
     class_id_map = {label: idx for idx, label in enumerate(unique_labels)}
