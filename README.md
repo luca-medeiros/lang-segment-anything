@@ -78,6 +78,14 @@ text_prompt = "wheel."
 results = model.predict([image_pil], [text_prompt])
 ```
 
+If desired, arguments below can be passed for offline operations:
+```python
+LangSAM(sam_ckpt_path,              # path for segment anything model
+        gdino_model_ckpt_path,      # path for grounding dino's model checkpoint
+        gdino_processor_ckpt_path   # path for grounding dino's processor checkpoint
+)
+```
+
 ## Examples
 
 ![car.png](/assets/outputs/car.png)

@@ -7,13 +7,13 @@ from lang_sam.models.utils import DEVICE
 
 
 class LangSAM:
-    def __init__(self, sam_type="sam2.1_hiera_small", ckpt_path: str | None = None, device=DEVICE):
+    def __init__(self, sam_type="sam2.1_hiera_small", sam_ckpt_path: str | None = None, gdino_model_ckpt_path: str | None = None, gdino_processor_ckpt_path: str | None = None, device=DEVICE):
         self.sam_type = sam_type
 
         self.sam = SAM()
-        self.sam.build_model(sam_type, ckpt_path, device=device)
+        self.sam.build_model(sam_type, sam_ckpt_path, device=device)
         self.gdino = GDINO()
-        self.gdino.build_model(device=device)
+        self.gdino.build_model(model_ckpt_path=gdino_model_ckpt_path, processor_ckpt_path=gdino_processor_ckpt_path, device=device)
 
     def predict(
         self,
