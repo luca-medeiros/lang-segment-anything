@@ -10,7 +10,7 @@ readme = "README.md"
 authors = [
   { name = "Luca Medeiros", email = "lucamedeiros@outlook.com" },
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 dynamic = ["dependencies"]
 
 [tool.setuptools.dynamic]
