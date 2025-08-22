@@ -17,7 +17,7 @@ Language Segment-Anything is an open-source project that combines the power of i
 
 ### Prerequisites
 
-- Python 3.11 or higher
+- Python 3.10 or higher
 
 ### Installation
 
