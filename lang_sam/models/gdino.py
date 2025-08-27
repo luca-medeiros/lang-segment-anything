@@ -35,10 +35,10 @@ class GDINO:
         box_threshold: float,
         text_threshold: float,
     ) -> list[dict]:
-        for i, prompt in enumerate(texts_prompt):
-            if prompt[-1] != ".":
-                texts_prompt[i] += "."
-        inputs = self.processor(images=images_pil, text=texts_prompt, return_tensors="pt").to(self.model.device)
+        texts_prompt = [prompt if prompt[-1] == "." else prompt + "." for prompt in texts_prompt]
+        inputs = self.processor(
+            images=images_pil, text=texts_prompt, padding=True, return_tensors="pt"
+        ).to(self.model.device)
         with torch.no_grad():
             outputs = self.model(**inputs)
 
