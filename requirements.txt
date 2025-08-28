@@ -1,10 +1,8 @@
-gradio==5.29.0
-litserve==0.2.8
-opencv-python-headless==4.10.0.84
-pydantic>=2.9.2
+gradio>=5.29.0
+litserve>=0.2.8
+opencv-python-headless>=4.10.0.84
 sam-2 @ git+https://github.com/facebookresearch/segment-anything-2@c2ec8e14a185632b0a5d8b161928ceb50197eddc
-supervision==0.23.0 ; python_full_version >= '3.10'
-transformers==4.44.2
-uvloop==0.20.0
-torch==2.4.1
-torchvision==0.19.1
+supervision>=0.23.0
+transformers>=4.44.2
+torch>=2.3.1
+torchvision>=0.18.1
